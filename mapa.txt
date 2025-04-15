@@ -1,0 +1,99 @@
+/projeto
+├── controllers/
+│   ├── authController.js
+│   └── usuariosController.js
+│   └── relatoriosController.js
+├── services/
+│   ├── authService.js
+│   └── usuariosService.js
+│   └── relatoriosService.js
+├── repository/
+│   ├── usuariosRepository.js
+│   └── relatoriosRepository.js
+├── routes/
+│   ├── auth.js
+│   ├── usuarios.js
+│   └── relatorios.js
+├── middlewares/
+│   └── authMiddleware.js
+├── bdUsiForms/
+│   └── RelatorioTurno.accdb
+├── server.js
+
+----------------------------------------------------------------------------------------------
+
+server.js
+Responsável por subir o servidor com Express.
+
+Usa cors() e express.json() para permitir comunicação entre frontend/backend e parse de JSON.
+
+Aponta os arquivos de rotas.
+
+controllers/
+Camada intermediária entre as rotas e as regras de negócio.
+
+ - authController.js: Controla o login.
+
+ - usuariosController.js: Recebe as requisições de listar e cadastrar usuários.
+
+ - relatoriosController.js: Controla a leitura de relatórios.
+
+services/
+Camada de regras de negócio.
+
+ - authService.js: Valida login e gera JWT.
+
+ - usuariosService.js: Valida dados de novo usuário, chama repositório.
+
+ - relatoriosService.js: Pede relatórios para o repositório.
+
+repository/
+Camada que acessa diretamente o banco Access via ODBC.
+
+ - usuariosRepository.js: Funções de banco para usuários (listar e inserir).
+
+ - relatoriosRepository.js: Busca relatórios no banco.
+
+ - authRepository.js: Busca usuarios pelas credenciais.
+
+routes/
+Define as rotas da API (endpoints).
+
+ - POST /api/auth/login: Login (gera JWT).
+
+ - GET /api/usuarios: Lista usuários (somente logado).
+
+ - POST /api/usuarios: Cadastra novo usuário (somente Supervisores/Admins).
+
+ - GET /api/relatorios: Lista relatórios.
+
+middlewares/authMiddleware.js
+Contém dois middlewares principais:
+
+ - autenticar: Verifica o token JWT.
+
+ - permitirSomente: Permite acesso apenas para perfis autorizados.
+
+bdUsiForms/RelatorioTurno.accdb
+Banco Access com as tabelas:
+
+ - Usuarios
+
+ - RelatoriosTurno
+
+4. As 3 Rotas Separadas com Controller / Service / Repository
+
+    1. POST /api/auth/login
+    Verifica se o usuário existe e gera JWT.
+
+        Fluxo: route → authController → authService → usuariosRepository
+
+    2. GET /api/usuarios
+    Lista todos os usuários (requer autenticação).
+
+        Fluxo: route → usuariosController → usuariosService → usuariosRepository
+
+    3. POST /api/usuarios
+    Cadastra novo usuário (requer ser Supervisor/Admin).
+
+        Fluxo: route → usuariosController → usuariosService → usuariosRepository
