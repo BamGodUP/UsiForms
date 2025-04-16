@@ -6,7 +6,8 @@ const connectionString = `Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=
 
 async function buscarUsuarioPorCredenciais(login, senha) {
   const connection = await odbc.connect(connectionString);
-  // Pesquisar sobre ...
+  
+  // Pesquisar sobre SQL Injection
   const result = await connection.query(
     'SELECT * FROM Usuarios WHERE Login = ? AND Senha = ?',
     [login, senha]
